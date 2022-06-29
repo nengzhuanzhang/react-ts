@@ -2,7 +2,6 @@ import { Button, Space, Table } from "antd";
 import React, { Component, ReactNode } from "react";
 import { getAdminList } from "../../api/admin";
 import DeleteAdmin from "./DeleteAdmin";
-import type { ColumnsType } from "antd/lib/table";
 
 interface IAdmin {
   id: number;
@@ -15,11 +14,12 @@ interface IColumns {
   title: string;
   dataIndex: string;
   key: string;
+  render?: (_: any, row: any) => ReactNode;
 }
 
 interface IState {
   adminList: IAdmin[];
-  // tableColumns: IColumns[];
+  tableColumns: Array<IColumns>;
   current: number;
   pageSize: number;
   total: number;
@@ -35,49 +35,48 @@ class AdminList extends Component<any, IState> {
       pageSize: 15,
       total: 0,
       loading: true,
+      tableColumns: [
+        {
+          title: "ID",
+          dataIndex: "id",
+          key: "id",
+        },
+        {
+          title: "姓名",
+          dataIndex: "name",
+          key: "name",
+        },
+        {
+          title: "邮箱",
+          dataIndex: "email",
+          key: "email",
+        },
+        {
+          title: "电话",
+          dataIndex: "mobile",
+          key: "mobile",
+        },
+        {
+          title: "操作",
+          dataIndex: "",
+          key: "operation",
+          render: (_: any, row: any) => {
+            return (
+              <>
+                <Space size="middle">
+                  <Button type="primary">编辑</Button>
+                  <DeleteAdmin
+                    id={row.id}
+                    deleteAdminCallBack={this.deleteAdminCallBack}
+                  ></DeleteAdmin>
+                </Space>
+              </>
+            );
+          },
+        },
+      ],
     };
   }
-
-  tableColumns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "姓名",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "邮箱",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "电话",
-      dataIndex: "mobile",
-      key: "mobile",
-    },
-    {
-      title: "操作",
-      dataIndex: "",
-      key: "operation",
-      render: (_: any, row: any) => {
-        return (
-          <>
-            <Space size="middle">
-              <Button type="primary">编辑</Button>
-              <DeleteAdmin
-                id={row.id}
-                deleteAdminCallBack={this.deleteAdminCallBack}
-              ></DeleteAdmin>
-            </Space>
-          </>
-        );
-      },
-    },
-  ];
 
   // 获取list
   getAdminList = (page: number = 1) => {
@@ -113,7 +112,7 @@ class AdminList extends Component<any, IState> {
           loading={this.state.loading}
           rowKey={(record) => record.id}
           dataSource={this.state.adminList}
-          columns={this.tableColumns}
+          columns={this.state.tableColumns}
           pagination={{
             position: ["bottomCenter"],
             total: this.state.total,
