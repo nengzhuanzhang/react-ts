@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, Suspense } from "react";
+import React, { Component, Fragment, ReactNode, Suspense } from "react";
 import { authRoutes, IRouter, noAuthRouter } from "../router";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import AppLayout from "../componments/AppLayout";
@@ -9,7 +9,9 @@ class View extends Component<any, any> {
       <>
         {routerList?.map((r) => {
           if (r.children) {
-            return <>{this.generateRouter(r.children)}</>;
+            return (
+              <Fragment key={r.key}>{this.generateRouter(r.children)}</Fragment>
+            );
           }
           return (
             <Route path={r.path} key={r.key} element={r.component}></Route>
