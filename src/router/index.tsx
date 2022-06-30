@@ -31,7 +31,7 @@ export const leftRouter: IRouter[] = [
   },
   {
     path: "/admin/user",
-    title: "用户列表",
+    title: "用户",
     icon: <UserOutlined />,
     key: "user",
     children: [
@@ -46,7 +46,7 @@ export const leftRouter: IRouter[] = [
   },
   {
     path: "/admin/admin",
-    title: "管理员列表",
+    title: "管理员",
     icon: <UserOutlined />,
     key: "admin",
     children: [

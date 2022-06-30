@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { authRoutes, IRouter, leftRouter } from "../router/index";
+import { IRouter, leftRouter } from "../router/index";
 import { FormInstance, Layout, Menu, MenuProps } from "antd";
 import { Link, matchPath } from "react-router-dom";
 import SubMenu from "antd/es/menu/SubMenu";
@@ -82,7 +82,7 @@ class LeftBar extends Component<IProps, IState> {
               defaultOpenKeys={this.state.defaultOpenKeys}
               style={{ height: "100%", borderRight: 0 }}
             >
-              {this.generateMenu(authRoutes)}
+              {this.generateMenu(leftRouter)}
             </Menu>
           ) : null}
         </Sider>
