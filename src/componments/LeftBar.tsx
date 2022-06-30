@@ -1,11 +1,55 @@
-import React, { Component } from "react";
-import { authRoutes, IRouter } from "../router/index";
-import { Layout, Menu, MenuProps } from "antd";
-import { Link } from "react-router-dom";
+import React, { Component, createRef } from "react";
+import { authRoutes, IRouter, leftRouter } from "../router/index";
+import { FormInstance, Layout, Menu, MenuProps } from "antd";
+import { Link, matchPath } from "react-router-dom";
 import SubMenu from "antd/es/menu/SubMenu";
+import { withRouter, RoutedProps } from "../router/withRouter";
+
 const { Sider } = Layout;
 
-class LeftBar extends Component<any, any> {
+interface IState {
+  defaultSelectedKeys: string[];
+  defaultOpenKeys: string[];
+}
+
+interface IProps extends RoutedProps {}
+
+class LeftBar extends Component<IProps, IState> {
+  constructor(props: any, context: any) {
+    super(props, context);
+    this.state = {
+      defaultOpenKeys: [],
+      defaultSelectedKeys: [],
+    };
+  }
+
+  componentDidMount() {
+    this.heightMenu(leftRouter);
+  }
+
+  heightMenu = (leftRoute: IRouter[], route?: IRouter) => {
+    const path = this.props.location.pathname;
+    for (const r of leftRoute) {
+      const match = matchPath(path, r.path);
+      if (match) {
+        if (route) {
+          this.setState({
+            defaultSelectedKeys: [r.key],
+            defaultOpenKeys: [route.key],
+          });
+        } else {
+          this.setState({
+            defaultOpenKeys: [r.key],
+          });
+        }
+        return;
+      }
+      if (r.children) {
+        this.heightMenu(r.children, r);
+      }
+    }
+  };
+
   generateMenu = (routerList?: IRouter[]) => {
     return (
       <>
@@ -31,18 +75,20 @@ class LeftBar extends Component<any, any> {
     return (
       <>
         <Sider width={200} className="site-layout-background">
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={["1"]}
-            defaultOpenKeys={["sub1"]}
-            style={{ height: "100%", borderRight: 0 }}
-          >
-            {this.generateMenu(authRoutes)}
-          </Menu>
+          {this.state.defaultSelectedKeys.length > 0 ? (
+            <Menu
+              mode="inline"
+              defaultSelectedKeys={this.state.defaultSelectedKeys}
+              defaultOpenKeys={this.state.defaultOpenKeys}
+              style={{ height: "100%", borderRight: 0 }}
+            >
+              {this.generateMenu(authRoutes)}
+            </Menu>
+          ) : null}
         </Sider>
       </>
     );
   }
 }
 
-export default LeftBar;
+export default withRouter(LeftBar);

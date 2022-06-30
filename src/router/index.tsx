@@ -21,7 +21,7 @@ export interface IRouter {
   children?: IRouter[];
 }
 
-export const authRoutes: IRouter[] = [
+export const leftRouter: IRouter[] = [
   {
     path: "/admin/dashboard",
     title: "首页",
@@ -60,6 +60,10 @@ export const authRoutes: IRouter[] = [
     ],
   },
 ];
+
+export const topRouter: IRouter[] = [];
+
+export const authRoutes: IRouter[] = [...leftRouter, ...topRouter];
 
 export const noAuthRouter: IRouter[] = [
   {
